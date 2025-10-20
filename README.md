@@ -31,6 +31,8 @@ Testing:
 4. Run test_search.py with predict_song.py running in the background to test your audio search
    algorithm. Replace pre-existing audio_path with any song in ./tracks/audio as a test.
 
+Note: you will need to pip install flask and flask-cors to run the test scripts.
+
 MDST Shazam Library - [download zip file here](https://drive.google.com/drive/folders/1Ui7o23sJjZB6tYUnoAffurmK0YB5nRVv?usp=sharing)
 
 ## Loading audio data:
