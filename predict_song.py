@@ -44,7 +44,7 @@ def predict():
     
     audio_file = request.files['audio']
     
-    print(audio_file.path)
+    # print(audio_file.path)
     
     # if not already a wav file then convert to wav
     # if audio_file.filename.endswith('.webm'):
@@ -72,7 +72,8 @@ def predict():
     # Convert to float32 and normalize
     #audio_array = audio_array.astype(np.float32) / (2**15)
     #print(f"Audio loaded: {len(audio_array)} samples at {sample_rate}Hz")
-    
+
+    # change this to a custom file path to test other files
     scores, _ = recognize_music("./tracks/audio/" + audio_file.filename)
 
     
