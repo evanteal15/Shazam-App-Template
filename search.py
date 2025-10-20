@@ -99,7 +99,7 @@ def score_hashes(hashes: dict[int, tuple[int, int]]) -> tuple[list[tuple[int, in
     return scores, time_pair_bins
 
 
-def recognize_music(sample_audio_path: str, sr: None|int = None, remove_sample: bool = True) -> list[tuple[int, int]]:
+def recognize_music(sample_audio_path: str, remove_sample: bool = True) -> list[tuple[int, int]]:
     """
     returns sorted list of `(song_id, score)` tuples, access top prediction with `scores[0][0]`
 
@@ -115,7 +115,7 @@ def recognize_music(sample_audio_path: str, sr: None|int = None, remove_sample: 
     song_id = recognize_music(sample_audio_path)[0][0]
     ```
     """
-    sample, sr = preprocess_audio(sample_audio_path, sr=sr)
+    sample, sr = preprocess_audio(sample_audio_path)
     # if remove_sample:
     #     os.remove(sample_audio_path)
     constellation_map = create_constellation_map(sample, sr)
