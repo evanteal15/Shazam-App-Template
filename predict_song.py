@@ -129,12 +129,10 @@ def add_song():
     """
     
     # TODO: Add a statement here to make sure 'youtube_url' is in request.form
-    if 'youtube_url' not in request.form:
-        print("YouTube URL missing")
-        return jsonify({'error': 'YouTube URL missing'})
+    pass
 
     # TODO: Extract the YouTube URL from the form data
-    youtube_url = request.form['youtube_url']
+    youtube_url = None
     
     # TODO: Check if the song already exists in the database using dba.check_if_song_exists
     # Implement this function in DB_adder.py if not already done

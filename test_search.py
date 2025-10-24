@@ -11,7 +11,7 @@ def get_prediction(audio_path: str) -> dict:
     url = "http://localhost:5003/predict"
     
     with open(audio_path, 'rb') as audio:
-        files = {'audio': (os.path.basename(audio_path), audio, 'audio/falc')}
+        files = {'audio': (os.path.basename(audio_path), audio, 'audio/flac')}
         response = requests.post(url, files=files)
     
     if response.status_code == 200:

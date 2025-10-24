@@ -7,9 +7,9 @@ def add_song(youtube_url: str) -> dict:
     # TODO: Set the url to the url you used in predict_song.py
     url = None
 
-    with open(youtube_url, 'rb') as url:
-        files = {'audio': (youtube_url, url, 'text/plain')}
-        response = requests.post(url, files=files)
+    # Initialize the package to send to the flask endpoint
+    files = {'youtube_url': (None, youtube_url, 'text/plain')}
+    response = requests.post(url, files=files)
     
     if response.status_code == 200:
         result = response.json()
