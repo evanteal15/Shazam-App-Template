@@ -4,11 +4,14 @@ import numpy as np
 from search import recognize_music
 import DBcontrol as db
 from DBcontrol import init_db
+import DB_adder as dba
 
 import tempfile
 import os
 import subprocess
 import requests
+import yt_dlp
+import ffmpeg
 
 app = Flask(__name__)
 CORS(app)
@@ -16,6 +19,29 @@ CORS(app)
 library = "sql/library.db"
 idx = 0
 
+# provided file for downloading audio from youtube
+file_format = 'flac'
+def download_audio(youtube_url: str) -> str:
+    
+    global idx
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'cookiefile': 'cookies.txt',
+        'outtmpl': f'output_{idx}.%(ext)s',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': file_format,
+        }],
+    }
+    idx += 1
+
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([youtube_url])
+        audio_path = f'output_{idx-1}.{file_format}'
+        stream = ffmpeg.input(f'output_{idx-1}.m4a')
+        stream = ffmpeg.output(stream, audio_path)
+        
+    return audio_path
 
 def get_yt_metadata(youtube_url: str, audio_path: str) -> dict:
     track_data = {}
@@ -93,6 +119,43 @@ def predict():
         'urls': urls[0],
         'titles': names[0]
     })
+    
+# TODO: add an endpoint (@app.route) for adding a song to the database
+def add_song():
+    """
+    Add a song to the database from the uploaded audio file and YouTube URL.
+    This endpoint accepts a POST request with an audio file and YouTube URL,
+    extracts metadata, and adds the song to the database.
+    """
+    
+    # TODO: Add a statement here to make sure 'youtube_url' is in request.form
+    if 'youtube_url' not in request.form:
+        print("YouTube URL missing")
+        return jsonify({'error': 'YouTube URL missing'})
+
+    # TODO: Extract the YouTube URL from the form data
+    youtube_url = request.form['youtube_url']
+    
+    # TODO: Check if the song already exists in the database using dba.check_if_song_exists
+    # Implement this function in DB_adder.py if not already done
+    if dba.check_if_song_exists(youtube_url):
+        return jsonify({'status': 'song already exists'})
+    
+    # download audio from YouTube
+    temp_audio_path = download_audio(youtube_url)
+    
+    # Extract metadata from YouTube
+    track_data = get_yt_metadata(youtube_url, temp_audio_path)
+    
+    # TODO: Add song to the database
+    # Implement dba.add_song in DB_adder.py if not already done
+    song_id = dba.add_song(track_data)
+    
+    # Clean up temporary file
+    os.remove(temp_audio_path)
+    
+    # TODO: Return a json object with a success message and the new tracks's song_id
+    return jsonify({'status': 'success', 'song_id': song_id})
             
 
 if __name__ == '__main__':

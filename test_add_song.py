@@ -1,22 +1,19 @@
 import os
 import requests
 
-# Initialize the database
-from cm_helper import add_noise
-from DBcontrol import init_db, retrieve_song_ids
 
-def get_prediction(audio_path: str) -> dict:
+def add_song(youtube_url: str) -> dict:
     
-    # TODO: Set the url to the url you used in predict_fruit.py
-    url = "http://localhost:5003/predict"
-    
-    with open(audio_path, 'rb') as audio:
-        files = {'audio': (os.path.basename(audio_path), audio, 'audio/falc')}
+    # TODO: Set the url to the url you used in predict_song.py
+    url = None
+
+    with open(youtube_url, 'rb') as url:
+        files = {'audio': (youtube_url, url, 'text/plain')}
         response = requests.post(url, files=files)
     
     if response.status_code == 200:
         result = response.json()
-        return result['titles']
+        return result['status']
     else:
         print(f"Failed to get prediction: {response.status_code}")
         return None
@@ -24,7 +21,7 @@ def get_prediction(audio_path: str) -> dict:
 
 
 # TODO: from tracks/audio, select the path of a file to identify
-audio = "Dogtooth_rec.flac"
+youtube_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 # add some noise to the audio for testing
 # audio_noisy = add_noise(audio)
@@ -35,4 +32,4 @@ audio = "Dogtooth_rec.flac"
 # sf.write(noisy_audio_path, audio_noisy, 44100)
 
 # print metadata from the prediction
-print(get_prediction(audio))
+print(add_song(youtube_url))
