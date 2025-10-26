@@ -75,14 +75,14 @@ def add_song(track_info: dict) -> str:
 def add_songs(audio_directory: str = "./tracks", n_songs: int = None, specific_songs: list[str] = None) -> None:
     
     tracks_info = load(audio_directory)
-    print(tracks_info)
+    #print(tracks_info)
 
     if n_songs is not None:
         tracks_info = tracks_info[:min(n_songs, len(tracks_info))]
 
-    print(tracks_info)
+    #print(tracks_info)
     for track_info in tracks_info:
-        print("Adding:", track_info["title"])
+        #print("Adding:", track_info["title"])
         if specific_songs is not None: 
             if track_info["title"] in specific_songs:
                 add_song(track_info)

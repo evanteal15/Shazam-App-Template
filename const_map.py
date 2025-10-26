@@ -25,12 +25,12 @@ def remove_duplicate_peaks(peaks: list[tuple[int, float]]):
     peaksc.sort(key=lambda x: x[0])
 
     # TODO: for each peak, search for duplicates within the next 15 peaks (ordered by time)
-    for i in range(len(peaks)):
-        for j in range(len(peaks[i:min(i+15, len(peaks)-1)])):
+    for i in range(len(peaksc)):
+        for j in range(len(peaksc[i:min(i+15, len(peaksc)-1)])):
             j = j+i+1
-            if peaks_are_duplicate(peaks[i], peaks[j]):
-                peaks[j] = None
-    return [peak for peak in peaks if peak is not None]
+            if peaks_are_duplicate(peaksc[i], peaksc[j]):
+                peaksc[j] = None
+    return [peak for peak in peaksc if peak is not None]
             
     # return unique_peaks
 
@@ -66,7 +66,8 @@ def find_peaks_windowed(frequencies, times, magnitude,
     #bands = [(0, 40), (40, 80), (80, 160), (160, 240), (240, 512)]
     bands = [(0, 10), (10, 20), (20, 40), (40, 80), (80, 160), (160, 512)]
     #bands = [(0, 30), (30, 60), (60, 90), (90, 120), (120, 160), (160, 330), (330, 512)]
-
+    from parameters import read_parameters
+    window_size, candidates_per_band, bands = read_parameters("constellation_mapping")
     # slide a window across time axis
     # height: entire frequency range
     # width:  window_size

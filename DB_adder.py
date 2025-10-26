@@ -41,7 +41,9 @@ def add_song(track_info: dict, resample_rate: None|int = 11025) -> int:
         hashes = create_hashes(constellation_map, song_id, sr)
         
         # TODO: Insert the hashes into the fingerprints table
-        for hash in hashes:
+        # HINT: can use the same query string 
+        #       as DBcontrol.py:add_hash()
+        for address, (anchorT, song_id) in hashes.items():
             query = None
             data = None
             cur.execute(query, data)

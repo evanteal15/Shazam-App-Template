@@ -10,8 +10,11 @@ def get_prediction(audio_path: str) -> dict:
     # TODO: Set the url to the url you used in predict_fruit.py
     url = "http://localhost:5003/predict"
     
+    #with open(audio_path, 'rb') as audio:
+        #files = {'audio': (os.path.basename(audio_path), audio, 'audio/flac')}
+        #response = requests.post(url, files=files)
     with open(audio_path, 'rb') as audio:
-        files = {'audio': (os.path.basename(audio_path), audio, 'audio/flac')}
+        files = {'audio': (audio_path, audio, 'audio/flac')}
         response = requests.post(url, files=files)
     
     if response.status_code == 200:
@@ -24,7 +27,7 @@ def get_prediction(audio_path: str) -> dict:
 
 
 # TODO: from tracks/audio, select the path of a file to identify
-audio = "Dogtooth_rec.flac"
+audio = "audio_samples/Dogtooth_rec.flac"
 
 # add some noise to the audio for testing
 # audio_noisy = add_noise(audio)

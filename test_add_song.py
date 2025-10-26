@@ -5,7 +5,10 @@ import requests
 def add_song(youtube_url: str) -> dict:
     
     # TODO: Set the url to the url you used in predict_song.py
+    # HINT: will look similar to the url 
+    # used in test_search.py:get_prediction()
     url = None
+    url = "http://localhost:5003/add"
 
     # Initialize the package to send to the flask endpoint
     files = {'youtube_url': (None, youtube_url, 'text/plain')}

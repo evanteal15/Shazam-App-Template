@@ -45,6 +45,11 @@ def score_hashes(hashes: dict[int, tuple[int, int]]) -> tuple[list[tuple[int, in
         matching_hashes = retrieve_hashes(address, cur)
         
         # TODO: Finish the loop by adding (sourceT, sampleT) pairs to the appropriate bin
+        if matching_hashes is not None:
+            #print(matching_hashes)
+            #exit(0)
+            for _, sourceT, song_id in matching_hashes:
+                time_pair_bins[song_id].add((sourceT, sampleT))
             
     # After all sample hashes have been used to search in the
     # database to form matching time pairs, the bins are scanned

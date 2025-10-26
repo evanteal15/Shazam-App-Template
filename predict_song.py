@@ -100,7 +100,8 @@ def predict():
     #print(f"Audio loaded: {len(audio_array)} samples at {sample_rate}Hz")
 
     # change this to a custom file path to test other files
-    scores, _ = recognize_music("./tracks/audio/" + audio_file.filename)
+    #scores, _ = recognize_music("./tracks/audio/" + audio_file.filename)
+    scores, _ = recognize_music(audio_file.filename)
 
     
     urls = []
@@ -132,6 +133,12 @@ def add_song():
     pass
 
     # TODO: Extract the YouTube URL from the form data
+    # HINT: what did add_song send to the endpoint?
+    #       files = {'youtube_url': (None, youtube_url, 'text/plain')}
+    #       response = requests.post(url, files=files)  # <-- access files 
+    #                                                         dict via request.files
+    # from flask import request
+
     youtube_url = None
     
     # TODO: Check if the song already exists in the database using dba.check_if_song_exists
@@ -150,6 +157,8 @@ def add_song():
     song_id = dba.add_song(track_data)
     
     # Clean up temporary file
+    # Note: we only need to keep the fingerprint representation,
+    # not the actual audio file
     os.remove(temp_audio_path)
     
     # TODO: Return a json object with a success message and the new tracks's song_id
@@ -158,7 +167,7 @@ def add_song():
 
 if __name__ == '__main__':
     # Initialize the database using our command for now
-    init_db()
+    init_db(n_songs=4)
     
-    # Run the Falsk app at this given host and port
+    # Run the Flask app at this given host and port
     app.run(host='0.0.0.0', port=5003, debug=True)

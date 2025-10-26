@@ -5,9 +5,9 @@ from scipy import signal
 def create_address(anchor: tuple[int, int], target: tuple[int, int], sr: int) -> int:
     
     # TODO: get relevant information from the anchor and target points
-    anchor_freq = None
-    target_freq = None
-    deltaT = None
+    anchor_freq = anchor[1]
+    target_freq = target[1]
+    deltaT = target[0] - anchor[0]
 
     ##############################################
     # Creating a 32 bit hash f1:f2:dt (2002 paper)
@@ -33,7 +33,7 @@ def create_address(anchor: tuple[int, int], target: tuple[int, int], sr: int) ->
     # int(anchor_freq)         occupies bits 0-9,    anchor_freq <= 1023
     # int(target_freq) << 10   occupies bits 10-19,  target_freq <= 1023
     # int(deltaT) << 20        occupies bits 20-31,  deltaT <= 4095
-    hash = None
+    hash = int(anchor_freq) | (int(target_freq) << 10) | (int(deltaT) << 20)
     return hash
 
 def create_hashes(peaks, song_id: int = None, sr: int = None, fanout_t=100, fanout_f=3000):
@@ -47,7 +47,8 @@ def create_hashes(peaks, song_id: int = None, sr: int = None, fanout_t=100, fano
     # Dictionary structure: {hash: (time, song_id)}
     # Dictionaries store key, value pairs allowing for fast lookup based on the key (hash)
     fingerprints = {}
-    
+    from parameters import read_parameters
+    fanout_t, fanout_f = read_parameters("hashing")
     # TODO: The loop is implemeted for you but try to understand the intuition behind it yourself
 
     # iterate through each anchor point in the constellation map
@@ -56,9 +57,9 @@ def create_hashes(peaks, song_id: int = None, sr: int = None, fanout_t=100, fano
         for j in range(i+1, len(peaks)):
             # TODO: select targets to compare to from a zone in front of the anchor point
             # get the time and frequency difference as well
-            target = None
-            time_diff = None
-            freq_diff = None
+            target = peaks[j]
+            time_diff = target[0] - anchor[0]
+            freq_diff = target[1] - anchor[1]
 
             # determine if peak is within target zone
             if time_diff <= 1:
@@ -74,5 +75,8 @@ def create_hashes(peaks, song_id: int = None, sr: int = None, fanout_t=100, fano
 
             # TODO: store the hash in our frequencies dictrionary
             # Hint: use the address as the key, and (time, song_id) as the value
-            
+            anchorT = anchor[0]
+
+            fingerprints[address] = (int(anchorT), song_id)
+
     return fingerprints
