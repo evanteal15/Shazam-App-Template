@@ -99,31 +99,6 @@ export default function Recorder() {
     })();
   }, []);
 
-  async function addSongToDatabase(song_url: any) {
-    try {
-      console.log("Adding song to database:", song_url);
-
-      setAddingSong(true);
-
-      const formData = new FormData();
-
-      // Append the actual file to FormData
-      formData.append("youtube_url", song_url);
-
-      // TODO: type in your server address here
-      const add_endpoint = "";
-
-      await fetch(add_endpoint, {
-        method: "POST",
-        body: formData,
-      });
-      setAddingSong(false);
-      Alert.alert("Song added to database!");
-    } catch (error) {
-      console.error("Error adding song to database:", error);
-    }
-  }
-
   const handlePrediction = async () => {
     console.log("Handling prediction...");
     if (uri) {
@@ -131,9 +106,11 @@ export default function Recorder() {
 
       const formData = new FormData();
 
+      // Lets encode the URI of our recording to a blob
       const responsee = await fetch(uri);
       const blob = await responsee.blob();
 
+      // Create a file from the blob
       const file = new File([blob], "audio.flac", { type: "audio/flac" });
 
       console.log("Audio file being sent:", file);
@@ -146,21 +123,23 @@ export default function Recorder() {
       // TODO: type in your server address here
       const predict_endpoint = "";
 
+      // This is our first JavaScript promise which is a fetch request to the server
+      // We start by making a post request to our prediction endpoint using the form data above
+      // which contains our audio file
       fetch(predict_endpoint, {
         method: "POST",
         body: formData,
-        // headers: {
-        //   "Content-Type": "multipart/form-data",
-        // },
       })
         .then((response) => {
+          // If we are at this point, our promise has been fulfilled and we have a response form the server!
+          // We convert the response to JSON to make it easier to work with in JavaScript
           return response.json();
         })
         .then((data) => {
-          setPredictedSong(data.best);
-          setPredictedConfidence(data.confidence);
-          setPredictedUrl(data.urls);
-          setShowPrediction(true);
+          // Now that we have the JSON data, we can change our state to reflect the prediction
+          // TODO: Change important varaibles now that we have our prediction data
+          // Hint: Some variables we might want to change are saving the predicted song,
+          // the url of the associated youtube video, and some marker so our app knows to show the prediction
         })
         .catch((error) => {
           console.error("Error in prediction fetch:", error);
@@ -168,42 +147,29 @@ export default function Recorder() {
     }
   };
 
-  const handleAddSong = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Adding song to database:", text);
+  async function addSongToDatabase(song_url: any) {
+    console.log("Adding song to database:", song_url);
 
     setAddingSong(true);
 
     const formData = new FormData();
 
-    // Append the actual file to FormData
-    formData.append("youtube_url", text);
+    // TODO: Append the correct data to our form in a way that our endpoint can access
+    formData.append("youtube_url", song_url);
 
-    fetch("http://192.168.1.170:5003/add", {
-      method: "POST",
-      body: formData,
-    })
-      .then(() => {
-        setAddingSong(false);
-        Alert.alert("Song added to database!");
-      })
-      .catch((error) => {
-        console.error("Error adding song to database:", error);
-      });
-    setText("");
-  };
+    // TODO: type in your server address here
+    const add_endpoint = "";
+
+    // TODO: follow handlePrediction's fetch structure to make a JavaScript fetch
+  }
 
   return (
     <>
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
           <View style={{ width: 150, marginBottom: 20, marginTop: 50 }}>
-            {/* <Button
-              title={
-                recorderState.isRecording ? "Stop Recording" : "Start Recording"
-              }
-              onPress={recorderState.isRecording ? stopRecording : record}
-            /> */}
+            {/** This is our button to start/stop recording. Depending on the state it will
+             * trigger the stopRecording or record function. **/}
             <TouchableOpacity
               style={styles.recorderButton}
               onPress={recorderState.isRecording ? stopRecording : record}
@@ -221,7 +187,10 @@ export default function Recorder() {
               )}
             </TouchableOpacity>
           </View>
+
+          {/** Use this button to test if you are recording audio correctly. **/}
           <View style={{ width: 150, marginBottom: 20, marginTop: 20 }}>
+            {/** onPress creates a new sound object and plays the recorded audio. **/}
             <Button
               title="Play Recording"
               onPress={async () => {
@@ -236,20 +205,21 @@ export default function Recorder() {
               }}
             />
           </View>
+
+          {/** This is our button to make a prediction. Notice how once we press it
+           * and event triggering the handlePrediction function occurs. **/}
           <View style={{ width: 150, marginBottom: 10, marginTop: 20 }}>
             <Button title="Predict Song" onPress={handlePrediction} />
           </View>
+
+          {/** If predictSong is True (i.e. we have a prediction made) then lets show
+           * the prediction details. **/}
           {predictedSong && (
             <View style={{ alignItems: "center", marginTop: 20 }}>
               <Text style={{ fontSize: 15, marginBottom: 20 }}>
                 Here is the most likely song from the recorded snippet!
               </Text>
-              {/* <Text>Predicted URL: {predictedUrl}</Text> */}
-              {/* <YouTube
-                    videoId={predictedUrl} // Extract this from your YouTube URL
-                    opts={opts}
-                    onReady={(event) => event.target.pauseVideo()}
-                  /> */}
+
               <YoutubePlayer
                 height={180}
                 scale={4}
@@ -262,10 +232,17 @@ export default function Recorder() {
               <Text>2: Add the song to our database below.</Text>
             </View>
           )}
+
+          {/** KeyboardAvoidingView should make it so on an iOS device the keyboard does not cover the input field. **/}
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"} // "padding" works best on iOS
             keyboardVerticalOffset={0} // adjust if you have headers/navbars
           >
+            {/** This is our input field for typing in a YouTube URL we want to add to the database. **/}
+
+            {/** TODO: If we press enter on this form, we want to trigger adding our text to the database.
+             * Finish implementing the onSubmitEditing function so that it triggers our javascript function
+             * for adding a song to the database. **/}
             <TextInput
               style={{
                 width: "100%",
@@ -279,31 +256,23 @@ export default function Recorder() {
               value={text}
               onChangeText={setText}
               placeholder="Enter YouTube URL here..."
-              // style={styles.input}
-              // Optionally submit on return key:
-              onSubmitEditing={(e) => {
-                e.preventDefault();
-                addSongToDatabase(text);
-                setText("");
-              }}
+              onSubmitEditing={}
               returnKeyType="done"
             />
           </KeyboardAvoidingView>
+
+          {/** This is our loading indicator that shows up when we are adding a song to the database. **/}
           {addingSong && (
             <View style={{ width: 150, marginBottom: 20, marginTop: 10 }}>
               <ActivityIndicator size="small" color="#0000ff" />
             </View>
           )}
+
+          {/** This is our button to add a song to the database. It only shows up if we are not currently adding a song. **/}
           {!addingSong && (
             <View style={{ width: 150, marginBottom: 20, marginTop: 10 }}>
-              <Button
-                title="Add Song"
-                onPress={(e) => {
-                  e.preventDefault();
-                  addSongToDatabase(text);
-                  setText("");
-                }}
-              />
+              {/** Implement the same function as above for onPress to add a song to the database. **/}
+              <Button title="Add Song" onPress={} />
             </View>
           )}
         </SafeAreaView>
