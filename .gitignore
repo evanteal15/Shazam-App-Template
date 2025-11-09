@@ -9,11 +9,12 @@ venv/
 # audio-related files
 musicdl
 .musicdl_env
-tracks*
 *.zip
 *.mp3
 *.flac
-*.wav
+my_app/
+my_app
+.expo/
 !pb_recording_long.wav
 !pb_recording_short.wav
 !sample.wav
