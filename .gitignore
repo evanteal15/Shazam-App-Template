@@ -12,7 +12,7 @@ musicdl
 *.zip
 *.mp3
 *.flac
-my_app/
+my_app/*
 my_app
 .expo/
 !pb_recording_long.wav
