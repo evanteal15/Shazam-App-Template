@@ -121,7 +121,7 @@ export default function Recorder() {
       console.log("Sending POST request to server...");
 
       // TODO: type in your server address here
-      const predict_endpoint = "";
+      const predict_endpoint = "http://32.5.49.300:5003/add";
 
       // This is our first JavaScript promise which is a fetch request to the server
       // We start by making a post request to our prediction endpoint using the form data above
