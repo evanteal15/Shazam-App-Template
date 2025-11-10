@@ -2,8 +2,10 @@
 
 This will be the backbone of your Shazam clone applications for the rest of the semester. You may fork or copy files from this repository into your own repository in order to get started.
 
-MDST Shazam Library - [download `tracks/` dataset as zip file here](https://drive.google.com/drive/folders/1Ui7o23sJjZB6tYUnoAffurmK0YB5nRVv?usp=sharing)
+- MDST Shazam Library - [download `tracks/` dataset as zip file here](https://drive.google.com/drive/folders/1Ui7o23sJjZB6tYUnoAffurmK0YB5nRVv?usp=sharing)
+    - 
     - extract `week3tracks.zip` to `tracks/` directory inside of `Shazam-App-Template`
+    - see [guide here](https://github.com/evanteal15/Shazam-App-Template?tab=readme-ov-file#loading-audio-dataset-from-week3trackszip-to-tracks) for details
     - optional: load `gridviewer.db` to visualize performance of recognition algorithm using different parameter sets (see Week 7)
 
 ## How to start an Expo App
@@ -19,6 +21,7 @@ npx expo start --tunnel
 
 Now that you've done this, copy the `Recorder.tsx` from the `Week_6/` directory to your `/app/(tabs)/` directory and begin working on the TODOs!
 
+---
 
 Provided helper files (no need to implement any code):
 
@@ -55,6 +58,8 @@ Testing:
 - `test_add_song.py` - Send a request to `/add_song` endpoint
 - `predict_song.py` -  Create a `/add_song` endpoint
 - `DB_adder.py` - TODO: Write SQL queries that add an audio fingerprint to the database
+- [Online resource for SQLite syntax](https://www.sqlitetutorial.net/) - see the `SELECT` statement, with keywords `FROM`, `WHERE`, `ORDER BY`, and `LIMIT`, as well as the `INSERT` statement. 
+- Also, `JOIN` is useful for working with multiple tables (see [this example](https://github.com/dennisfarmer/F25-Shazam-GridSearch?tab=readme-ov-file#view-results-of-grid-search-using-sqlite) in grid search)
 
 # Week 6
 
@@ -72,6 +77,7 @@ Testing:
     - [F25-Shazam-GridSearch - export results of parameter sweep to a SQLite database for analysis](https://github.com/dennisfarmer/F25-Shazam-GridSearch/tree/master)
     - [musicdl - create custom music dataset using free Spotify API credentials](https://github.com/dennisfarmer/musicdl)
     - [precomputed `gridviewer.db` on Google Drive](https://drive.google.com/file/d/1cv1LpDl98PW5T54Sdc4CSBDxhQOPWwKZ/view?usp=drive_link) that can be loaded and queried
+    - (see "[*Loading precomputed grid search results*](https://github.com/evanteal15/Shazam-App-Template?tab=readme-ov-file#loading-precomputed-grid-search-results)" in helpful code snippet section)
 
 # Week 8
 
@@ -84,9 +90,14 @@ Testing:
 ## Loading audio dataset from [`week3tracks.zip`](https://drive.google.com/file/d/11zWYTmj4jxXbsz6bnfiSyVFxZQA4ZVma/view?usp=drive_link) to `tracks/`:
 
 1. download [`week3tracks.zip`](https://drive.google.com/file/d/11zWYTmj4jxXbsz6bnfiSyVFxZQA4ZVma/view?usp=drive_link) from Google Drive
-2. extract zip to `tracks/` folder inside of your `Shazam-App-Template` repository
+2. extract zip contents to `tracks/` folder inside of your `Shazam-App-Template` repository
+    - `tracks/audio/` contains your audio files
+    - `tracks/tracks.csv` contains metadata and paths to audio files
+    - can load `tracks/` as list of dictionaries using `dataloader.py:load()`
 
-The below code does this using the provided functions inside of `dataloader.py`
+![](Week_7/tracks_looks_like_this.png)
+
+The below code does the zip file extraction using the provided functions inside of `dataloader.py`. You can do this with your file manager, but you might have to rename the folder to "`tracks/`"
 
 ```python
 from dataloader import extract_zip, load
