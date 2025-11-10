@@ -15,7 +15,8 @@ def set_parameters(
         candidates_per_band=6,
         bands=[(0,10),(10,20),(20,40),(40,80),(80,160),(160,512)],
         fanout_t=100,
-        fanout_f=1500
+        fanout_f=1500,
+        library_path = "sql/library.db"
         ):
     """
     Used by `grid_search.py` to search for optimal parameters
@@ -29,7 +30,12 @@ def set_parameters(
         "hashing": {
             "fanout_t": fanout_t,
             "fanout_f": fanout_f
+        },
+        "database": {
+            "library_path": library_path,
+            "use_index": True
         }
+
     }
     with open(parameters_json, "w", encoding="utf-8") as f:
         json.dump(parameters, f, indent=2)
@@ -44,6 +50,9 @@ def read_parameters(paramset: str = "all_parameters"):
 
     # hasher.py
     fanout_t, fanout_f = read_parameters("hashing")
+
+    # DBcontrol.py
+    library = read_parameters("database")
 
     # all
     returns dict containing all parameters
@@ -66,6 +75,10 @@ def read_parameters(paramset: str = "all_parameters"):
     if paramset == "hashing":
         h = params.get("hashing", {})
         return h.get("fanout_t"), h.get("fanout_f")
+
+    if paramset == "database":
+        h = params.get("database", {})
+        return h.get("library_path")
 
     if paramset == "all_parameters":
         return params
