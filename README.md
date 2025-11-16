@@ -76,7 +76,7 @@ Testing:
 - `parameters.py`: globally set parameters in a json file for access by algorithm
     - [F25-Shazam-GridSearch - export results of parameter sweep to a SQLite database for analysis](https://github.com/dennisfarmer/F25-Shazam-GridSearch/tree/master)
     - [musicdl - create custom music dataset using free Spotify API credentials](https://github.com/dennisfarmer/musicdl)
-    - [precomputed `gridviewer.db` on Google Drive](https://drive.google.com/file/d/1cv1LpDl98PW5T54Sdc4CSBDxhQOPWwKZ/view?usp=drive_link) that can be loaded and queried
+    - [precomputed `week8_gridviewer.db` on Google Drive](https://drive.google.com/file/d/1eNp3Xo1T6YUig6Q_hTQFjckGupeZwBgV/view?usp=drive_link) that can be loaded and queried
     - (see "[*Loading precomputed grid search results*](https://github.com/evanteal15/Shazam-App-Template?tab=readme-ov-file#loading-precomputed-grid-search-results)" in helpful code snippet section)
 
 # Week 8
